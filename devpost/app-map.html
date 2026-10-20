@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Freelancer Swipe — App Map</title>
+<style>
+  :root { --bg:#000; --fg:#fff; --accent:#876dff; --card:#121212; --border:#262626; --muted:#a1a1aa; --ok:#10b981; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:14px; line-height:1.6; }
+  main { max-width:900px; margin:0 auto; padding:40px 20px 60px; }
+  h1 { font-size:2rem; margin:0 0 4px; color:var(--accent); }
+  h2 { font-size:1rem; margin:40px 0 12px; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; }
+  p, li { color:#e4e4e7; }
+  .muted { color:var(--muted); }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px 20px; margin:10px 0; }
+  code { background:#1c1c1f; color:#c4b5fd; padding:1px 6px; border-radius:6px; }
+  pre { background:#0a0a0a; border:1px solid var(--border); border-radius:12px; padding:12px 14px; overflow:auto; font-size:12.5px; }
+  ol.route > li { margin-bottom:14px; }
+  details { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:10px 14px; margin:8px 0; }
+  details[open] { border-color:var(--accent); }
+  summary { cursor:pointer; font-weight:600; }
+  summary:focus-visible, a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  a { color:#c4b5fd; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { text-align:left; padding:8px; border-bottom:1px solid var(--border); vertical-align:top; }
+  th { color:var(--muted); }
+  svg text { font-family:inherit; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Freelancer Swipe — App Map</h1>
+  <p class="muted">A take-home guide to where things live. Snapshot of the code at commit <code>2ca86cf</code> (Oct 20, 2026). The code may drift after this.</p>
+
+  <h2>What the app is</h2>
+  <div class="card">
+    <p>A browser-only web app. A client picks a skill, swipes through freelancers one card at a time, and a tick reveals contact info and saves the freelancer. Freelancers add themselves with a short form.</p>
+    <ul>
+      <li><b>Screens</b> (<code>src/screens/</code>): RoleScreen, SkillPicker, SwipeDeck, SavedList, FreelancerForm. <code>src/App.tsx</code> shows one at a time.</li>
+      <li><b>Logic</b> (<code>src/lib/</code>): pure functions with Vitest tests. <code>pool.ts</code> (who matches a skill), <code>deck.ts</code> (skip / back / wrap), <code>validate.ts</code> (form rules), <code>storage.ts</code> (the only file touching localStorage).</li>
+      <li><b>Swipe gesture</b>: <code>src/hooks/useSwipe.ts</code>, hand-written pointer events.</li>
+      <li><b>Data</b>: 15 sample profiles in <code>src/data/sampleFreelancers.ts</code>. Submissions and the Saved list are in the browser's localStorage.</li>
+    </ul>
+  </div>
+
+  <h2>One action: a client ticks a freelancer</h2>
+  <svg viewBox="0 0 860 210" role="img" aria-label="Tick flow: drag right in useSwipe, onSwipe in SwipeDeck, tick in App saves to localStorage, ContactReveal shows contact" style="width:100%;height:auto">
+    <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#876dff"/></marker></defs>
+    <g fill="#121212" stroke="#876dff" stroke-width="1.5">
+      <rect x="10" y="20" width="180" height="70" rx="12"/>
+      <rect x="230" y="20" width="180" height="70" rx="12"/>
+      <rect x="450" y="20" width="180" height="70" rx="12"/>
+      <rect x="670" y="20" width="180" height="70" rx="12"/>
+      <rect x="450" y="125" width="180" height="70" rx="12" stroke="#10b981"/>
+      <rect x="670" y="125" width="180" height="70" rx="12" stroke="#10b981"/>
+    </g>
+    <g fill="#fff" font-size="13" text-anchor="middle">
+      <text x="100" y="48">Drag right / ✓</text><text x="100" y="70" fill="#a1a1aa" font-size="11">useSwipe.ts</text>
+      <text x="320" y="48">onSwipe('right')</text><text x="320" y="70" fill="#a1a1aa" font-size="11">SwipeDeck.tsx</text>
+      <text x="540" y="48">tick(freelancer)</text><text x="540" y="70" fill="#a1a1aa" font-size="11">App.tsx</text>
+      <text x="760" y="48">addSaved + persist</text><text x="760" y="70" fill="#a1a1aa" font-size="11">lib/storage.ts</text>
+      <text x="540" y="153">ContactReveal</text><text x="540" y="175" fill="#a1a1aa" font-size="11">popup with contact</text>
+      <text x="760" y="153">localStorage</text><text x="760" y="175" fill="#a1a1aa" font-size="11">fs.saved.v1</text>
+    </g>
+    <g stroke="#876dff" stroke-width="1.5" marker-end="url(#arr)">
+      <line x1="190" y1="55" x2="228" y2="55"/><line x1="410" y1="55" x2="448" y2="55"/><line x1="630" y1="55" x2="668" y2="55"/>
+      <line x1="320" y1="90" x2="450" y2="150"/><line x1="760" y1="90" x2="760" y2="123"/>
+    </g>
+  </svg>
+
+  <h2>Reference route (3 stops)</h2>
+  <p class="muted">A route through the real code for the action above. Search for the anchor text in your editor (Ctrl+P to open the file, Ctrl+F to find).</p>
+  <ol class="route">
+    <li><b><code>src/hooks/useSwipe.ts</code> → <code>releaseDecision</code> and <code>fly</code></b><br>
+      When you let go of the card, <code>releaseDecision</code> compares the drag distance with 30% of the card width (at least 100px). Past it, <code>fly</code> animates the card off-screen and then calls <code>onSwipe</code>. The ✓ button calls <code>fly('right')</code> directly.</li>
+    <li><b><code>src/screens/SwipeDeck.tsx</code> → <code>const onSwipe</code></b><br>
+      Left means <code>skip</code> from <code>deck.ts</code>. Right calls <code>onTick(current)</code>, opens <code>ContactReveal</code> with that freelancer, and moves the deck on with <code>advance</code>.</li>
+    <li><b><code>src/App.tsx</code> → <code>const tick</code>, then <code>src/lib/storage.ts</code> → <code>addSaved</code> / <code>persistSaved</code></b><br>
+      <code>addSaved</code> adds the id once (re-ticking changes nothing), and <code>persistSaved</code> writes it to <code>localStorage["fs.saved.v1"]</code>. If the browser refuses, the app shows a toast. On reload, <code>loadSaved</code> reads it back, which is why Saved survives.</li>
+  </ol>
+
+  <h2>To change this, start here</h2>
+  <table>
+    <tr><th>You want to…</th><th>Start in</th></tr>
+    <tr><td>Change the colors or font</td><td><code>src/index.css</code> → the <code>@theme</code> block</td></tr>
+    <tr><td>Add or rename starter skills</td><td><code>src/data/skills.ts</code> → <code>STARTER_SKILLS</code></td></tr>
+    <tr><td>Edit the sample freelancers</td><td><code>src/data/sampleFreelancers.ts</code> → <code>seeds</code></td></tr>
+    <tr><td>Make swiping more or less sensitive</td><td><code>src/hooks/useSwipe.ts</code> → <code>swipeThreshold</code> (test in <code>useSwipe.test.ts</code>)</td></tr>
+    <tr><td>Change what the form requires</td><td><code>src/lib/validate.ts</code> → <code>validateFreelancer</code> (tests in <code>validate.test.ts</code>)</td></tr>
+    <tr><td>Move to a real database (SQL Server)</td><td><code>src/lib/storage.ts</code>. It's the only file that reads or writes data; swap its functions for API calls</td></tr>
+    <tr><td>Change what the card shows</td><td><code>src/components/FreelancerCard.tsx</code></td></tr>
+  </table>
+
+  <h2>A practice to reuse</h2>
+  <div class="card">
+    <p><b>Give every step an observable check, and when a check breaks, ask what the evidence says before changing code.</b></p>
+    <p>Each slice in <code>devpost/checklist.md</code> had a <i>Verify (mechanical)</i> line, and the agent ran real browser checks against it. After slice 3, the old swipe check timed out on the ↶ button. The evidence (the new Saved checks passing, plus a screenshot of the contact popup) showed the app was right: a tick now opens a popup that covers the deck, exactly as <code>prd.md › Tick and Contact Reveal</code> asks. So the <i>check</i> was updated, not the app.</p>
+    <p class="muted">On your next project with an agent: write the "how we'll know it works" line before each step, and when something fails, ask the agent to show the evidence that separates "the app is wrong" from "the check is out of date."</p>
+  </div>
+
+  <h2>Run it again</h2>
+<pre>npm install
+npm run dev      # http://localhost:5173
+npm test         # 24 logic tests
+npm run build</pre>
+  <p>Live: <a href="https://kelvintrinhsg.github.io/Freelancer-Marketplace/">kelvintrinhsg.github.io/Freelancer-Marketplace</a>. Every push to <code>main</code> redeploys via <code>.github/workflows/deploy.yml</code>.</p>
+
+  <details>
+    <summary>Where the other actions live</summary>
+    <ul>
+      <li><b>Pick a skill:</b> <code>SkillPicker.tsx</code> → <code>App.tsx › pickSkill</code> → <code>pool.ts › findBySkill</code> (no match → toast).</li>
+      <li><b>↶ back:</b> <code>SwipeDeck.tsx</code> → <code>deck.ts › back</code> (only undoes skips, not ticks).</li>
+      <li><b>Freelancer sign-up:</b> <code>FreelancerForm.tsx › submit</code> → <code>validate.ts › validateFreelancer</code> → <code>App.tsx › addFreelancer</code> → <code>storage.ts › persistFreelancers</code> (<code>fs.freelancers.v1</code>).</li>
+      <li><b>Saved list:</b> <code>SavedList.tsx</code> resolves saved ids against the pool, newest first.</li>
+    </ul>
+  </details>
+</main>
+</body>
+</html>

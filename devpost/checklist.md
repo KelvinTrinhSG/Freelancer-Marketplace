@@ -62,11 +62,13 @@ Build mode: fast
 ## Hands-on Checkpoints
 
 - [x] Early usable behavior explored — after slice 2 (theme, card, and swipe feel, while there's still time to change them). Learner tried it in the browser: "quá tuyệt" (great), no changes requested.
-- [ ] Final kick-the-tires exploration and feedback completed
+- [x] Final kick-the-tires exploration and feedback completed — learner tried the finished app: "quá tuyệt rồi, không cần thay đổi gì nữa" (great, no changes needed).
 
 ## Final Review
 
-- [ ] Final review complete — feedback resolved and learner confirms ready to ship
+No revisions requested. Agent verification before the learner's review: 24 Vitest tests, build, lint, and 35 Edge browser checks (swipe, saved, form) passing on the live GitHub Pages URL.
+
+- [x] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
 
