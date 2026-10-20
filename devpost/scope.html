@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scope — Freelancer Swipe</title>
+<style>
+  :root {
+    --bg: #faf8f5; --card: #fff; --ink: #1f2328; --muted: #5d6670;
+    --accent: #e8506a; --accent-soft: #fde7eb; --ok: #2e8b57; --ok-soft: #e3f4ea;
+    --later: #b7791f; --later-soft: #fbf0dc; --cut: #6b7280; --cut-soft: #eceef1;
+    --line: #e3dfd9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16181c; --card: #1f2227; --ink: #e8e9eb; --muted: #a0a7b0;
+      --accent: #ff6f87; --accent-soft: #3a2228; --ok: #5cc98a; --ok-soft: #1f3328;
+      --later: #e0a84a; --later-soft: #3a3020; --cut: #9aa1ab; --cut-soft: #2a2d33;
+      --line: #33373e;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--ink); }
+  main { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
+  header .tag { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ok); background: var(--ok-soft); padding: 3px 10px; border-radius: 99px; }
+  h1 { font-size: 2.2rem; margin: 10px 0 4px; }
+  .lede { font-size: 1.15rem; color: var(--muted); margin: 0 0 28px; }
+  h2 { font-size: 1.15rem; margin: 0 0 8px; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px 24px; margin-bottom: 18px; }
+  .kernel { border-left: 5px solid var(--accent); background: var(--accent-soft); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid section { margin: 0; }
+  @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
+  blockquote { margin: 8px 0; padding: 8px 14px; border-left: 3px solid var(--line); color: var(--muted); font-style: italic; }
+  svg text { fill: var(--ink); font-family: inherit; }
+  .diagram { width: 100%; height: auto; }
+  .steps { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 10px; }
+  .steps button { border: 1px solid var(--line); background: var(--bg); color: var(--ink); padding: 6px 14px; border-radius: 99px; cursor: pointer; font: inherit; font-size: 14px; }
+  .steps button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .step-text { min-height: 3.2em; padding: 10px 14px; background: var(--bg); border-radius: 10px; }
+  details { border-radius: 10px; padding: 10px 16px; margin-bottom: 10px; }
+  details summary { cursor: pointer; font-weight: 600; }
+  details ul { margin: 8px 0 4px; padding-left: 20px; }
+  .now { background: var(--ok-soft); } .now summary { color: var(--ok); }
+  .later { background: var(--later-soft); } .later summary { color: var(--later); }
+  .cut { background: var(--cut-soft); } .cut summary { color: var(--cut); }
+  .done-beat { font-weight: 600; color: var(--accent); }
+  footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 30px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="tag">Scope · Approved</span>
+    <h1>Freelancer Swipe <small style="font-size:.5em;color:var(--muted)">(working name)</small></h1>
+    <p class="lede">A Tinder-style app where clients swipe through freelancers for a skill they need, tick the ones they like, and get their contact info right away.</p>
+  </header>
+
+  <section class="kernel">
+    <h2>The Unique Kernel</h2>
+    <p>Flip the hiring flow: instead of posting a job and waiting for proposals, the client <strong>actively browses</strong> freelancers one card at a time and decides in seconds based on <strong>portfolio images of past projects</strong>. A tick instantly reveals how to contact them. The platform only connects people; the conversation happens elsewhere.</p>
+  </section>
+
+  <section>
+    <h2>Old flow vs. this flow</h2>
+    <svg class="diagram" viewBox="0 0 800 230" role="img" aria-label="Old flow: post job, wait, review proposals, interview. New flow: enter skill, swipe cards, tick, contact.">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#9aa1ab"/></marker>
+        <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e8506a"/></marker>
+      </defs>
+      <text x="0" y="22" font-size="14" font-weight="600" opacity=".7">Today (slow)</text>
+      <g font-size="13" text-anchor="middle">
+        <rect x="0" y="35" width="160" height="50" rx="10" fill="none" stroke="#9aa1ab" stroke-dasharray="4 3"/><text x="80" y="65">Post a job</text>
+        <rect x="210" y="35" width="160" height="50" rx="10" fill="none" stroke="#9aa1ab" stroke-dasharray="4 3"/><text x="290" y="65">Wait for proposals</text>
+        <rect x="420" y="35" width="160" height="50" rx="10" fill="none" stroke="#9aa1ab" stroke-dasharray="4 3"/><text x="500" y="65">Sift proposals</text>
+        <rect x="630" y="35" width="160" height="50" rx="10" fill="none" stroke="#9aa1ab" stroke-dasharray="4 3"/><text x="710" y="65">Long interviews</text>
+      </g>
+      <g stroke="#9aa1ab" stroke-width="2" marker-end="url(#arr)">
+        <line x1="162" y1="60" x2="206" y2="60"/><line x1="372" y1="60" x2="416" y2="60"/><line x1="582" y1="60" x2="626" y2="60"/>
+      </g>
+      <text x="0" y="132" font-size="14" font-weight="600" fill="#e8506a">Freelancer Swipe (fast)</text>
+      <g font-size="13" text-anchor="middle">
+        <rect x="0" y="145" width="160" height="56" rx="10" fill="#e8506a" fill-opacity=".12" stroke="#e8506a"/><text x="80" y="170">Client enters</text><text x="80" y="188">a skill</text>
+        <rect x="210" y="145" width="160" height="56" rx="10" fill="#e8506a" fill-opacity=".12" stroke="#e8506a"/><text x="290" y="170">One card at a time:</text><text x="290" y="188">portfolio images</text>
+        <rect x="420" y="145" width="160" height="56" rx="10" fill="#e8506a" fill-opacity=".12" stroke="#e8506a"/><text x="500" y="170">Swipe past</text><text x="500" y="188">or tick ✓</text>
+        <rect x="630" y="145" width="160" height="56" rx="10" fill="#2e8b57" fill-opacity=".15" stroke="#2e8b57"/><text x="710" y="170">Contact shown</text><text x="710" y="188">+ saved list</text>
+      </g>
+      <g stroke="#e8506a" stroke-width="2" marker-end="url(#arr2)">
+        <line x1="162" y1="173" x2="206" y2="173"/><line x1="372" y1="173" x2="416" y2="173"/><line x1="582" y1="173" x2="626" y2="173"/>
+      </g>
+    </svg>
+  </section>
+
+  <div class="grid">
+    <section>
+      <h2>Who It's For</h2>
+      <p>Individual clients and small, low-budget startups with <strong>short, specific, fast jobs</strong>: a short video, testing a game. They want to pick someone they like and talk to them now, not post-and-wait on Upwork or Facebook groups.</p>
+    </section>
+    <section>
+      <h2>Why This Matters</h2>
+      <blockquote>"Khách hàng tìm Freelancer rất nhanh."</blockquote>
+      <p>Clients find freelancers very fast. Learner's course goal: learning how to work with an agent.</p>
+    </section>
+  </div>
+  <div style="height:18px"></div>
+
+  <section>
+    <h2>The Core Loop: step through it</h2>
+    <div class="steps" id="steps">
+      <button data-i="0" class="active">1 · Enter skill</button>
+      <button data-i="1">2 · Matches load</button>
+      <button data-i="2">3 · Judge the card</button>
+      <button data-i="3">4 · Tick → contact</button>
+    </div>
+    <div class="step-text" id="stepText"></div>
+    <noscript><ol><li>Client opens the app and enters the skill they need.</li><li>The app finds matching freelancers in the database and shows them one at a time.</li><li>Client looks at the card (name, location, portfolio + project images) and swipes past or ticks.</li><li>A tick shows contact info and contact methods, and saves the freelancer.</li></ol></noscript>
+    <p style="color:var(--muted);margin:10px 0 0">They come back whenever a new small job comes up. Feel: Tinder-like, fast, light, visual-first; portfolio images dominate the card.</p>
+  </section>
+
+  <section>
+    <h2>What "Working" Looks Like</h2>
+    <p>A client opens the app, enters a skill, and the app pulls matching freelancers from the database and shows them one by one. The client swipes through and ticks a few.</p>
+    <p class="done-beat">"Oh, that's cool" beat: a tick immediately shows that freelancer's contact details, and the ticked freelancers are waiting in a saved list.</p>
+  </section>
+
+  <section>
+    <h2>Boundary</h2>
+    <details class="now" open>
+      <summary>Now: the proof of concept</summary>
+      <ul>
+        <li>Skill search → matching freelancers from a database</li>
+        <li>Swipe card UI, one freelancer at a time: name, location, skills, portfolio/project images</li>
+        <li>Swipe past or tick</li>
+        <li>Tick reveals contact info + contact methods, adds to a saved list</li>
+        <li>10–20 pre-made sample freelancer profiles with portfolio images (seed data)</li>
+      </ul>
+    </details>
+    <details class="later">
+      <summary>Later: worth doing, not now</summary>
+      <ul>
+        <li>Freelancer self-registration: profile, portfolio, skills, project images, self-promotion</li>
+        <li>Enforcing that freelancers must have portfolio, skills, and images before appearing</li>
+        <li>Client accounts/login so saved contacts persist per client</li>
+      </ul>
+    </details>
+    <details class="cut">
+      <summary>Cut: with reasons</summary>
+      <ul>
+        <li>In-app messaging, calls, interview scheduling: the platform only connects people; contact happens elsewhere</li>
+        <li>Job posting and proposals: exactly the slow flow this idea replaces</li>
+      </ul>
+    </details>
+  </section>
+
+  <footer>Companion to <code>devpost/scope.md</code> (canonical).</footer>
+</main>
+<script>
+  const texts = [
+    "Client opens the app and enters the skill they need, e.g. \"short video\" or \"game testing\".",
+    "The app finds matching freelancers in the database and shows them <strong>one at a time</strong>.",
+    "Client looks at the card: name, location, and most importantly <strong>portfolio + project images</strong>, then swipes past or ticks.",
+    "A tick shows that freelancer's <strong>contact info and contact methods</strong>, and saves them to the client's list."
+  ];
+  const btns = document.querySelectorAll('#steps button');
+  const out = document.getElementById('stepText');
+  function show(i) { btns.forEach(b => b.classList.toggle('active', +b.dataset.i === i)); out.innerHTML = texts[i]; }
+  btns.forEach(b => b.addEventListener('click', () => show(+b.dataset.i)));
+  show(0);
+</script>
+</body>
+</html>

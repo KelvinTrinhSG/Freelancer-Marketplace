@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD — Freelancer Swipe</title>
+<style>
+  :root {
+    --bg: #faf8f5; --card: #fff; --ink: #1f2328; --muted: #5d6670; --line: #e3dfd9;
+    --accent: #fd5068; --accent2: #ff7854; --accent-soft: #fde7eb;
+    --ok: #2e8b57; --ok-soft: #e3f4ea; --warn: #b7791f; --warn-soft: #fbf0dc; --cut: #6b7280; --cut-soft: #eceef1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16181c; --card: #1f2227; --ink: #e8e9eb; --muted: #a0a7b0; --line: #33373e;
+      --accent-soft: #3a2228; --ok: #5cc98a; --ok-soft: #1f3328; --warn: #e0a84a; --warn-soft: #3a3020; --cut: #9aa1ab; --cut-soft: #2a2d33;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--ink); }
+  .hero { background: linear-gradient(135deg, var(--accent2), var(--accent) 60%, #e5397f); color: #fff; padding: 44px 20px 36px; text-align: center; }
+  .hero .tag { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; background: rgba(255,255,255,.22); padding: 3px 12px; border-radius: 99px; }
+  .hero h1 { font-size: 2.4rem; margin: 10px 0 6px; font-weight: 800; }
+  .hero p { max-width: 640px; margin: 0 auto; opacity: .95; }
+  main { max-width: 900px; margin: 0 auto; padding: 28px 20px 80px; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px 24px; margin-bottom: 18px; }
+  h2 { font-size: 1.15rem; margin: 0 0 10px; }
+  .expand { border-left: 5px solid var(--accent); background: var(--accent-soft); }
+  svg text { fill: var(--ink); font-family: inherit; }
+  .diagram { width: 100%; height: auto; }
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tabs button { border: 1px solid var(--line); background: var(--bg); color: var(--ink); padding: 6px 14px; border-radius: 99px; cursor: pointer; font: inherit; font-size: 14px; }
+  .tabs button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .panel { display: none; } .panel.active { display: block; }
+  .panel ul { padding-left: 20px; margin: 6px 0; }
+  .crit li { list-style: none; margin-left: -20px; }
+  .crit li::before { content: "☐ "; color: var(--accent); }
+  .assume { color: var(--warn); font-size: 14px; }
+  .phone { float: right; width: 150px; margin: 0 0 10px 18px; border-radius: 22px; border: 6px solid var(--ink); overflow: hidden; font-size: 11px; }
+  .phone .screen { background: linear-gradient(160deg, var(--accent2), var(--accent)); color: #fff; height: 250px; padding: 14px 10px; display: flex; flex-direction: column; text-align: center; }
+  .phone .screen .card { background: #fff; color: #222; border-radius: 12px; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .phone .img { flex: 1; background: repeating-linear-gradient(45deg, #ddd, #ddd 8px, #eee 8px, #eee 16px); display: flex; align-items: center; justify-content: center; color: #777; }
+  .phone .meta { padding: 6px; text-align: left; }
+  .phone .btns { display: flex; justify-content: space-around; padding: 8px 0 0; font-size: 18px; }
+  .pill { background: #fff; color: #222; border-radius: 99px; padding: 6px; margin-top: 8px; font-weight: 600; }
+  details { border-radius: 10px; padding: 10px 16px; margin-bottom: 10px; }
+  details summary { cursor: pointer; font-weight: 600; }
+  details ul { margin: 8px 0 4px; padding-left: 20px; }
+  .now { background: var(--ok-soft); } .now summary { color: var(--ok); }
+  .later { background: var(--warn-soft); } .later summary { color: var(--warn); }
+  .cut { background: var(--cut-soft); } .cut summary { color: var(--cut); }
+  .states { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+  .state { border: 1px solid var(--line); border-radius: 10px; padding: 12px; background: var(--bg); }
+  .state b { display: block; margin-bottom: 4px; }
+  .q { border-left: 4px solid var(--warn); padding-left: 12px; margin: 8px 0; }
+  footer { color: var(--muted); font-size: 13px; text-align: center; }
+  .clear { clear: both; }
+</style>
+</head>
+<body>
+<div class="hero">
+  <span class="tag">PRD · Approved</span>
+  <h1>Freelancer Swipe</h1>
+  <p>Small clients swipe through freelancers for a skill, tick the ones they like, and instantly get their contact info, plus a quick form for freelancers to join the deck.</p>
+</div>
+<main>
+  <section class="expand">
+    <h2>From scope to product</h2>
+    <p>Scope said <em>"client enters a skill and swipes"</em>. Now we know exactly what that means: a Tinder-style role screen, skill chips with a type-your-own fallback, one big best-project image per card, swipe <strong>or</strong> ✕/✓ with a back button, a tick that reveals contact instantly, and a Saved list that survives a restart. Scope also gained one thing: a minimal freelancer form, so the demo closes the loop on both sides.</p>
+  </section>
+
+  <section>
+    <h2>The Core Journey</h2>
+    <svg class="diagram" viewBox="0 0 860 300" role="img" aria-label="Role screen branches to freelancer form or skill picker; freelancer form feeds the pool; skill picker leads to swipe deck; tick leads to contact reveal and saved list.">
+      <defs>
+        <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#fd5068"/></marker>
+        <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#9aa1ab"/></marker>
+      </defs>
+      <g font-size="13" text-anchor="middle">
+        <rect x="10" y="120" width="130" height="56" rx="12" fill="#fd5068"/><text x="75" y="145" style="fill:#fff" font-weight="700">Role screen</text><text x="75" y="163" style="fill:#fff">Client | Freelancer</text>
+
+        <rect x="200" y="20" width="150" height="56" rx="12" fill="none" stroke="#fd5068"/><text x="275" y="45">Freelancer form</text><text x="275" y="63" font-size="11">name, skills, links, contact</text>
+        <rect x="420" y="20" width="150" height="56" rx="12" fill="none" stroke="#9aa1ab" stroke-dasharray="4 3"/><text x="495" y="45">Freelancer pool</text><text x="495" y="63" font-size="11">10–20 samples + new</text>
+
+        <rect x="200" y="210" width="150" height="56" rx="12" fill="none" stroke="#fd5068"/><text x="275" y="235">Skill picker</text><text x="275" y="253" font-size="11">tick or type</text>
+        <rect x="420" y="210" width="150" height="56" rx="12" fill="#fd5068" fill-opacity=".12" stroke="#fd5068"/><text x="495" y="235" font-weight="700">Swipe deck</text><text x="495" y="253" font-size="11">✕ ↶ ✓ · loops at end</text>
+        <rect x="640" y="150" width="150" height="56" rx="12" fill="#2e8b57" fill-opacity=".15" stroke="#2e8b57"/><text x="715" y="175">Contact reveal</text><text x="715" y="193" font-size="11">right after ✓</text>
+        <rect x="640" y="240" width="150" height="50" rx="12" fill="#2e8b57" fill-opacity=".15" stroke="#2e8b57"/><text x="715" y="270">Saved list</text>
+        <text x="495" y="140" font-size="11" opacity=".7">feeds</text>
+        <text x="380" y="300" font-size="11" opacity=".7">no match → notify, pick again</text>
+      </g>
+      <g stroke="#fd5068" stroke-width="2" fill="none" marker-end="url(#a)">
+        <path d="M140,135 L196,55"/>
+        <path d="M140,160 L196,235"/>
+        <line x1="352" y1="48" x2="416" y2="48"/>
+        <line x1="352" y1="238" x2="416" y2="238"/>
+        <path d="M572,230 L636,185"/>
+        <path d="M572,245 L636,262"/>
+      </g>
+      <path d="M495,78 L495,206" stroke="#9aa1ab" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#g)"/>
+      <path d="M440,268 C400,295 330,295 290,270" stroke="#9aa1ab" stroke-width="1.5" fill="none" stroke-dasharray="3 3" marker-end="url(#g)"/>
+    </svg>
+  </section>
+
+  <section>
+    <h2>Screens: behavior and how to check it</h2>
+    <div class="tabs" id="tabs">
+      <button data-p="0" class="active">Role</button>
+      <button data-p="1">Freelancer form</button>
+      <button data-p="2">Skill picker</button>
+      <button data-p="3">Swipe deck</button>
+      <button data-p="4">Tick → contact</button>
+      <button data-p="5">Saved list</button>
+    </div>
+
+    <div class="panel active">
+      <div class="phone"><div class="screen"><div style="font-weight:800;font-size:15px;margin-top:20px">Freelancer Swipe</div><div style="flex:1"></div><div class="pill">I'm a Client</div><div class="pill">I'm a Freelancer</div></div></div>
+      <p>The first screen, modeled on Tinder's sign-in: app name, tagline, two big rounded buttons.</p>
+      <ul class="crit"><li>Shows <b>I'm a Client</b> and <b>I'm a Freelancer</b>; each leads to its flow.</li></ul>
+      <div class="clear"></div>
+    </div>
+
+    <div class="panel">
+      <p>A short form, no account, no upload.</p>
+      <ul><li>Name · Location · Skills (tick chips + type a missing one) · YouTube/TikTok link · Best-project <b>image link</b> · Contact info</li></ul>
+      <ul class="crit">
+        <li>A typed custom skill counts like any listed skill.</li>
+        <li>Missing required fields are pointed out; nothing is saved.</li>
+        <li>After submit: confirmation, and the profile shows up in the deck for one of its skills.</li>
+      </ul>
+      <p class="assume">Assumption: required = name, at least one skill, image link, contact info.</p>
+    </div>
+
+    <div class="panel">
+      <p>Fastest possible: tap a skill chip, or type one that isn't listed.</p>
+      <ul class="crit">
+        <li>Choosing a skill opens the deck filtered to that skill.</li>
+        <li>No freelancer has it → notification, pick again.</li>
+      </ul>
+      <p class="assume">Assumption: one skill per search.</p>
+    </div>
+
+    <div class="panel">
+      <div class="phone"><div class="screen" style="background:var(--bg);color:var(--ink)"><div class="card"><div class="img">best project</div><div class="meta"><b>Linh, 26</b> · Hanoi<br>Short video · ▶ TikTok</div></div><div class="btns"><span>✕</span><span>↶</span><span style="color:#2e8b57">✓</span></div></div></div>
+      <p>The kernel. One card at a time, judged in seconds by one image.</p>
+      <ul class="crit">
+        <li>One large best-project image, name, location, skills.</li>
+        <li>YouTube/TikTok link visible; tap opens the video.</li>
+        <li>Swipe left / ✕ skips · swipe right / ✓ ticks.</li>
+        <li>↶ returns to the previously skipped freelancer.</li>
+        <li>After the last card, the deck restarts from the first.</li>
+      </ul>
+      <div class="clear"></div>
+    </div>
+
+    <div class="panel">
+      <p>The "oh, that's cool" beat: no waiting, no proposal.</p>
+      <ul class="crit">
+        <li>Ticking shows that freelancer's contact info immediately.</li>
+        <li>The freelancer is added to the Saved list.</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <ul class="crit">
+        <li>Every ticked freelancer with name, image, contact info.</li>
+        <li>Still there after closing and reopening the app on the same device.</li>
+      </ul>
+      <p class="assume">Assumption: empty list shows a short "nothing ticked yet" message.</p>
+    </div>
+    <noscript><p>All screen details are in <code>prd.md &gt; Features and Behavior</code>.</p></noscript>
+  </section>
+
+  <section>
+    <h2>States</h2>
+    <div class="states">
+      <div class="state"><b>First use</b>10–20 sample freelancers already in the pool. The deck is never empty.</div>
+      <div class="state"><b>No match</b>Notification, then pick a skill again.</div>
+      <div class="state"><b>End of deck</b>Loops back to the first card.</div>
+      <div class="state"><b>Restart</b>Saved list persists on this device.</div>
+      <div class="state"><b>Contact</b>Shown only. Messaging and calls happen outside the app.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Look and Feel</h2>
+    <p>From the learner's Tinder reference: orange-to-pink gradient, bold white headline type, big white pill buttons, mobile-first. On the card, the project image dominates and text is secondary.</p>
+  </section>
+
+  <section>
+    <h2>Boundary</h2>
+    <details class="now" open><summary>Building now</summary><ul>
+      <li>Role screen · minimal freelancer form · skill picker · swipe deck (swipe + buttons + back)</li>
+      <li>Tick → contact reveal · Saved list that survives restart</li>
+      <li>Sample freelancers · no-match notification · deck loop</li>
+    </ul></details>
+    <details class="later"><summary>Deferred</summary><ul>
+      <li>Accounts/login: Saved list is per device instead</li>
+      <li>Editing/deleting a freelancer profile</li>
+      <li>Image upload: pasted link instead</li>
+      <li>Shared server database (SQL Server): planned for later</li>
+    </ul></details>
+    <details class="cut"><summary>Non-goals</summary><ul>
+      <li>In-app messaging, calls, scheduling: the platform only connects people</li>
+      <li>Job posting and proposals: the slow flow this replaces</li>
+      <li>Multiple images per card: one best image, by design</li>
+    </ul></details>
+  </section>
+
+  <section>
+    <h2>Open Questions</h2>
+    <div class="q"><b>For 4-spec (must answer):</b> a new freelancer profile shows up for clients only if both see the same pool. With device-only storage, that works only on the same device/browser. That's fine for the demo video, but it must be a conscious spec choice.</div>
+    <div class="q"><b>Can wait:</b> the exact starter skill list. The build can propose one.</div>
+  </section>
+
+  <footer>Companion to <code>devpost/prd.md</code> (canonical).</footer>
+</main>
+<script>
+  const btns = document.querySelectorAll('#tabs button');
+  const panels = document.querySelectorAll('.panel');
+  btns.forEach(b => b.addEventListener('click', () => {
+    btns.forEach(x => x.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    b.classList.add('active');
+    panels[+b.dataset.p].classList.add('active');
+  }));
+</script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Freelancer Swipe — Technical Spec</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#000; --fg:#fff; --accent:#876dff; --card:#121212; --border:#262626; --muted:#a1a1aa; --ok:#10b981; --no:#ef4444; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:'JetBrains Mono', ui-monospace, monospace; line-height:1.55; font-size:14px; }
+  .glow { position:fixed; top:0; left:50%; transform:translateX(-50%); width:100%; height:420px; background:rgba(135,109,255,.07); filter:blur(120px); border-radius:50%; pointer-events:none; z-index:-1; }
+  main { max-width:980px; margin:0 auto; padding:40px 20px 80px; }
+  h1 { font-size:2.2rem; margin:0 0 6px; background:linear-gradient(90deg,var(--accent),#c084fc); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  h2 { font-size:1.15rem; margin:44px 0 12px; color:var(--accent); letter-spacing:.04em; text-transform:uppercase; }
+  h3 { font-size:1rem; margin:0 0 6px; }
+  p, li { color:#e4e4e7; }
+  .muted { color:var(--muted); }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px 20px; margin:12px 0; }
+  .pill { display:inline-block; padding:2px 10px; border-radius:999px; border:1px solid var(--accent); color:var(--accent); font-size:12px; margin:2px 4px 2px 0; }
+  .pill.solid { background:var(--accent); color:#fff; }
+  code { background:#1c1c1f; padding:1px 6px; border-radius:6px; color:#c4b5fd; }
+  pre { background:#0a0a0a; border:1px solid var(--border); border-radius:12px; padding:14px; overflow:auto; font-size:12.5px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { text-align:left; padding:8px; border-bottom:1px solid var(--border); vertical-align:top; }
+  th { color:var(--muted); font-weight:600; }
+  a { color:#c4b5fd; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
+  details { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:10px 14px; margin:8px 0; }
+  details[open] { border-color:var(--accent); }
+  summary { cursor:pointer; font-weight:600; }
+  .ref { font-size:12px; color:var(--muted); }
+  /* stepper */
+  .stepper-tabs { display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
+  .stepper-tabs button, .nav button { font:inherit; background:var(--card); color:var(--fg); border:1px solid var(--border); border-radius:999px; padding:6px 14px; cursor:pointer; }
+  .stepper-tabs button.active { background:var(--accent); border-color:var(--accent); }
+  .step { display:none; }
+  .step.active { display:block; animation:fade .3s ease-out; }
+  .nav { display:flex; justify-content:space-between; align-items:center; margin-top:12px; }
+  .nav button:disabled { opacity:.4; cursor:default; }
+  .dots { color:var(--muted); font-size:12px; }
+  .hl { color:var(--accent); font-weight:600; }
+  @keyframes fade { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+  .mermaid-fallback { display:block; }
+  .mermaid-ok .mermaid-fallback { display:none; }
+  .mermaid { display:none; background:#0a0a0a; border:1px solid var(--border); border-radius:12px; padding:12px; }
+  .mermaid-ok .mermaid { display:block; }
+  .swatch { display:inline-block; width:14px; height:14px; border-radius:4px; vertical-align:middle; margin-right:6px; border:1px solid #333; }
+  footer { position:fixed; bottom:0; left:0; right:0; border-top:1px solid var(--border); background:rgba(0,0,0,.8); overflow:hidden; padding:6px 0; }
+  footer span { display:inline-block; white-space:nowrap; color:var(--accent); font-size:11px; letter-spacing:.2em; animation:marq 18s linear infinite; }
+  @keyframes marq { from{transform:translateX(-100%)} to{transform:translateX(100vw)} }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<main>
+  <h1>Freelancer Swipe — Technical Spec</h1>
+  <p class="muted">Status: <span class="pill solid">approved</span> · Canonical source: <code>devpost/spec.md</code> · This page is a visual companion.</p>
+
+  <h2>How this works, in plain language</h2>
+  <div class="card">
+    <p>A <span class="hl">browser-only website</span>, with no server and no database yet.</p>
+    <ul>
+      <li><b>Sample pool:</b> 15 pre-made profiles written into the code, so the deck is never empty.</li>
+      <li><b>localStorage</b> (a small notebook the browser keeps for one site) holds profiles submitted on this browser, plus the client's Saved list. Both survive a restart.</li>
+      <li><b>Pool</b> = samples + submissions on <i>this</i> browser. That's a conscious limit until SQL Server arrives.</li>
+      <li><b>Screens</b> are React components, shown one at a time.</li>
+      <li><b>Swipe</b> is hand-written with pointer events: drag, tilt, fly off.</li>
+      <li><b>Publishing:</b> push to GitHub → GitHub Actions builds → GitHub Pages hosts a free public link.</li>
+    </ul>
+  </div>
+
+  <h2>System map</h2>
+  <div id="diagram">
+    <pre class="mermaid">
+flowchart LR
+  Role[RoleScreen] -->|I'm a Freelancer| Form[FreelancerForm]
+  Form -->|valid submit| LS1[(localStorage<br/>fs.freelancers.v1)]
+  Role -->|I'm a Client| Picker[SkillPicker]
+  Samples[sampleFreelancers.ts] --> Pool[pool.ts<br/>samples + submitted]
+  LS1 --> Pool
+  Pool -->|filter by skill| Picker
+  Picker -->|matches &gt; 0| Deck[SwipeDeck]
+  Deck -->|tick| Reveal[ContactReveal]
+  Reveal --> LS2[(localStorage<br/>fs.saved.v1)]
+  LS2 --> Saved[SavedList]
+    </pre>
+    <pre class="mermaid-fallback">
+ RoleScreen ──Freelancer──▶ FreelancerForm ──submit──▶ [localStorage: fs.freelancers.v1]
+     │                                                          │
+     └──Client──▶ SkillPicker ◀──filter── pool.ts ◀── sampleFreelancers.ts
+                       │
+                  matches > 0
+                       ▼
+                  SwipeDeck ──tick──▶ ContactReveal ──▶ [localStorage: fs.saved.v1] ──▶ SavedList
+    </pre>
+  </div>
+
+  <h2>Walk the core journey</h2>
+  <p class="ref">prd.md › The Core Journey. Click through each step to see which file handles it.</p>
+  <div class="card">
+    <div class="stepper-tabs">
+      <button data-flow="client" class="active">Client side</button>
+      <button data-flow="freelancer">Freelancer side</button>
+    </div>
+    <div id="steps"></div>
+    <div class="nav"><button id="prev">← Prev</button><span class="dots" id="dots"></span><button id="next">Next →</button></div>
+  </div>
+
+  <h2>Stack</h2>
+  <div class="card">
+    <table>
+      <tr><th>Piece</th><th>Choice</th><th>Why</th></tr>
+      <tr><td>Build</td><td><a href="https://vite.dev/guide/">Vite</a> (react-ts)</td><td>Fast; static output for Pages. Tradeoff: Node and a build step.</td></tr>
+      <tr><td>UI</td><td><a href="https://react.dev/learn">React</a> + TypeScript</td><td>Fits one screen / one card at a time.</td></tr>
+      <tr><td>Styling</td><td><a href="https://tailwindcss.com/docs/installation/using-vite">Tailwind v4</a> + <a href="https://lucide.dev/guide/packages/lucide-react">lucide-react</a></td><td>Matches the ScratchCard reference.</td></tr>
+      <tr><td>Swipe</td><td>Pointer events (no lib)</td><td>No dependency; full control over ↶. Tradeoff: less springy.</td></tr>
+      <tr><td>Storage</td><td>localStorage</td><td>Frontend only now; SQL Server later.</td></tr>
+      <tr><td>Tests</td><td><a href="https://vitest.dev/guide/">Vitest</a></td><td>Checks the logic modules at each build step.</td></tr>
+      <tr><td>Hosting</td><td><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages">GitHub Actions → Pages</a></td><td>Free public link on every push.</td></tr>
+    </table>
+    <p class="muted">No versions were looked up while planning. Check the Vite template, the Tailwind v4 plugin, and the Pages action versions early in the build.</p>
+  </div>
+
+  <h2>Look and feel</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Palette</h3>
+      <div><span class="swatch" style="background:#000"></span>background #000</div>
+      <div><span class="swatch" style="background:#876dff"></span>accent #876dff</div>
+      <div><span class="swatch" style="background:#121212"></span>card #121212</div>
+      <div><span class="swatch" style="background:#262626"></span>border #262626</div>
+      <div><span class="swatch" style="background:#a1a1aa"></span>muted #a1a1aa</div>
+    </div>
+    <div class="card">
+      <h3>Type and shape</h3>
+      <p>JetBrains Mono everywhere. Bold headlines with a purple gradient. Cards <code>rounded-2xl</code>, buttons <code>rounded-lg</code>.</p>
+      <p>Role screen: <span class="pill solid">I'm a Client</span><span class="pill">I'm a Freelancer</span></p>
+    </div>
+    <div class="card">
+      <h3>Swipe card</h3>
+      <p>Image ~70% of the card height. Name, location, skills in a dark overlay at the bottom. "Sample" / "Saved" tags.</p>
+      <p><span class="pill" style="border-color:var(--no);color:var(--no)">✕</span><span class="pill">↶</span><span class="pill" style="border-color:var(--ok);color:var(--ok)">✓</span></p>
+    </div>
+  </div>
+  <p class="ref">Reference: <a href="https://github.com/Kali-Decoder/ScratchCard">Kali-Decoder/ScratchCard</a>. This page uses the same theme.</p>
+
+  <h2>Components</h2>
+  <p class="ref">Click to expand. Each one names the PRD behavior it serves.</p>
+  <div id="components"></div>
+
+  <h2>Data: where it lives</h2>
+  <div class="card">
+    <table>
+      <tr><th>Data</th><th>Lives in</th><th>After reload</th></tr>
+      <tr><td>15 sample profiles</td><td><code>src/data/sampleFreelancers.ts</code></td><td>Always there</td></tr>
+      <tr><td>Starter skills</td><td><code>src/data/skills.ts</code></td><td>Always there</td></tr>
+      <tr><td>Submitted profiles</td><td><code>localStorage["fs.freelancers.v1"]</code></td><td>Kept (this browser)</td></tr>
+      <tr><td>Saved list</td><td><code>localStorage["fs.saved.v1"]</code> → <code>{id, savedAt}[]</code></td><td>Kept (this browser)</td></tr>
+      <tr><td>Screen, skill, deck position, back-history</td><td>React state</td><td>Reset to role screen</td></tr>
+    </table>
+<pre>type Freelancer = {
+  id: string; name: string; location: string; skills: string[];
+  videoUrl?: string; imageUrl: string; contact: string;
+  isSample: boolean; createdAt: string;
+};</pre>
+    <p class="muted"><code>storage.ts</code> is the one file to swap for API calls when SQL Server arrives.</p>
+  </div>
+
+  <h2>File structure</h2>
+<pre>Freelancer Marketplace/
+├── .github/workflows/deploy.yml   # build + deploy to Pages
+├── src/
+│   ├── App.tsx                    # screen switcher
+│   ├── index.css                  # Tailwind + theme tokens
+│   ├── types.ts
+│   ├── data/   skills.ts, sampleFreelancers.ts
+│   ├── lib/    storage.ts, pool.ts, deck.ts, validate.ts (+ tests)
+│   ├── hooks/  useSwipe.ts
+│   ├── components/ SkillChips, FreelancerCard, ContactReveal, Toast, MarqueeFooter
+│   └── screens/    RoleScreen, FreelancerForm, SkillPicker, SwipeDeck, SavedList
+├── index.html  vite.config.ts  package.json  README.md
+└── devpost/</pre>
+
+  <h2>Where it breaks and what happens</h2>
+  <div class="grid">
+    <div class="card"><h3>Broken image link</h3><p>Purple placeholder with initials.</p></div>
+    <div class="card"><h3>localStorage unavailable</h3><p>Samples only, plus a "Can't save on this browser" toast.</p></div>
+    <div class="card"><h3>Blank page on Pages</h3><p>Prevented with <code>base: './'</code>. Check the live URL after the first deploy.</p></div>
+    <div class="card"><h3>Video link starts a drag</h3><p>The link stops pointer propagation.</p></div>
+  </div>
+
+  <h2>Run and demo</h2>
+  <div class="card">
+<pre>npm install
+npm run dev     # open http://localhost:5173
+npm test
+npm run build</pre>
+    <p><b>Demo video:</b> submit a freelancer with a custom skill → pick that skill as a client → their card appears → swipe, ↶, tick → contact reveal → Saved → reload, Saved is still there → try a no-match skill.</p>
+  </div>
+
+  <h2>Decisions</h2>
+  <div class="card">
+    <p><b>Learner:</b> frontend + localStorage · one pool per browser · GitHub Actions → Pages · Vite + React + TS · ScratchCard style · accepted: pill role buttons, marquee footer, hand-written swipe.</p>
+    <p><b>Agent details (changeable):</b> Tailwind v4, lucide, Vitest, storage keys, 30% swipe threshold, starter skills, picsum images, one free-text contact field, ↶ undoes skips only.</p>
+    <p><b>Learner uncertainty:</b> none raised.</p>
+  </div>
+</main>
+<footer><span>FREELANCER SWIPE • TECHNICAL SPEC • FIND TALENT FAST • FREELANCER SWIPE • TECHNICAL SPEC</span></footer>
+
+<script>
+const flows = {
+  client: [
+    ["Pick a role", "Tap <b>I'm a Client</b> on RoleScreen.", "screens/RoleScreen.tsx → App state = picker", "prd.md › Role Selection"],
+    ["Pick a skill", "Tap a chip or type a skill and press Find. <code>pool.findBySkill</code> matches ignoring case and spaces.", "screens/SkillPicker.tsx, lib/pool.ts", "prd.md › Skill Picker"],
+    ["No match?", "A toast says no freelancers have that skill, and you stay on the picker.", "components/Toast.tsx", "prd.md › States and Boundaries"],
+    ["Swipe", "One card at a time. Drag left / ✕ skips, ↶ goes back to the last skip, and after the last card the deck wraps to the first.", "screens/SwipeDeck.tsx, hooks/useSwipe.ts, lib/deck.ts", "prd.md › Swipe Deck"],
+    ["Tick", "Drag right / ✓ saves the id to <code>fs.saved.v1</code> and opens ContactReveal.", "components/ContactReveal.tsx, lib/storage.ts", "prd.md › Tick and Contact Reveal"],
+    ["Saved list", "Every ticked freelancer with contact info. Still there after reload.", "screens/SavedList.tsx", "prd.md › Saved List"]
+  ],
+  freelancer: [
+    ["Pick a role", "Tap <b>I'm a Freelancer</b>.", "screens/RoleScreen.tsx → App state = form", "prd.md › Role Selection"],
+    ["Fill the form", "Name, location, skills (chips + custom), video link, image link, contact.", "screens/FreelancerForm.tsx, components/SkillChips.tsx", "prd.md › Freelancer Profile Form"],
+    ["Validate", "Missing name / skill / image / contact → fields outlined red, nothing saved.", "lib/validate.ts", "prd.md › Freelancer Profile Form"],
+    ["Saved to the pool", "Appended to <code>fs.freelancers.v1</code>, then a confirmation shows. Clients on this browser now see the profile.", "lib/storage.ts, lib/pool.ts", "prd.md › Freelancer Profile Form"]
+  ]
+};
+let flow = "client", i = 0;
+function render() {
+  const s = flows[flow][i];
+  document.getElementById("steps").innerHTML =
+    `<div class="step active"><h3>${i+1}. ${s[0]}</h3><p>${s[1]}</p><p><span class="hl">Files:</span> <code>${s[2]}</code></p><p class="ref">${s[3]}</p></div>`;
+  document.getElementById("dots").textContent = `${i+1} / ${flows[flow].length}`;
+  document.getElementById("prev").disabled = i === 0;
+  document.getElementById("next").disabled = i === flows[flow].length - 1;
+}
+document.querySelectorAll(".stepper-tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".stepper-tabs button").forEach(x => x.classList.remove("active"));
+  b.classList.add("active"); flow = b.dataset.flow; i = 0; render();
+});
+document.getElementById("prev").onclick = () => { i--; render(); };
+document.getElementById("next").onclick = () => { i++; render(); };
+render();
+
+const comps = [
+  ["App (screen switcher)", "Holds screen state (role | form | picker | deck | saved) and the chosen skill. No router; refresh returns to the role screen.", "prd.md › Screens and Layout"],
+  ["RoleScreen", "App name, tagline, two pill buttons.", "prd.md › Role Selection"],
+  ["FreelancerForm", "Fields + validation. Required: name, ≥1 skill, image link, contact. Links must start with http(s). Confirmation panel after submit.", "prd.md › Freelancer Profile Form"],
+  ["SkillChips", "Shared chips + custom input. Multi-select in the form, single-select in the picker. Case-insensitive dedupe.", "prd.md › Freelancer Profile Form, Skill Picker"],
+  ["SkillPicker", "Starter + custom skills. Find → deck, or a no-match toast.", "prd.md › Skill Picker"],
+  ["SwipeDeck", "Deck state from deck.ts. ✕ / ↶ / ✓ buttons, Change skill, Saved count.", "prd.md › Swipe Deck"],
+  ["FreelancerCard", "Big image (placeholder on error), name, location, skills, Sample/Saved tags, video link that doesn't trigger a drag.", "prd.md › Swipe Deck"],
+  ["useSwipe", "Pointer capture, translate + rotate, 30% / 100px threshold, ~200ms fly-out, touch-action: pan-y.", "prd.md › Swipe Deck"],
+  ["ContactReveal", "Overlay after a tick: contact info, Keep swiping, View saved.", "prd.md › Tick and Contact Reveal"],
+  ["SavedList", "Saved ids resolved against the pool, newest first. Empty-state message.", "prd.md › Saved List"],
+  ["lib/ (storage, pool, deck, validate)", "Pure logic with Vitest tests. storage.ts is the seam for the future SQL Server API.", "prd.md › States and Boundaries"]
+];
+document.getElementById("components").innerHTML = comps.map(c =>
+  `<details><summary>${c[0]}</summary><p>${c[1]}</p><p class="ref">${c[2]}</p></details>`).join("");
+</script>
+<script type="module">
+  try {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false, theme: "dark", themeVariables: { primaryColor: "#121212", primaryBorderColor: "#876dff", lineColor: "#876dff", primaryTextColor: "#fff", fontFamily: "JetBrains Mono, monospace" } });
+    document.getElementById("diagram").classList.add("mermaid-ok");
+    await mermaid.run({ querySelector: ".mermaid" });
+  } catch (e) {
+    document.getElementById("diagram").classList.remove("mermaid-ok");
+  }
+</script>
+</body>
+</html>

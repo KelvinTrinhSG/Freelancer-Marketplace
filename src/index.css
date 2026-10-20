@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+/* Theme tokens from the ScratchCard reference (spec.md > Look and Feel). */
+@theme {
+  --color-background: #000000;
+  --color-foreground: #ffffff;
+  --color-accent: #876dff;
+  --color-card: #121212;
+  --color-card-border: #262626;
+  --color-muted: #a1a1aa;
+
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --animate-fade-in: fade-in 0.4s ease-out both;
+  --animate-slide-in: slide-in-from-right 0.3s ease-out both;
+  --animate-marquee: marquee 18s linear infinite;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-from-right {
+  from { opacity: 0; transform: translateX(100%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100vw); }
+}
+
+html {
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  color: var(--color-accent);
+}
