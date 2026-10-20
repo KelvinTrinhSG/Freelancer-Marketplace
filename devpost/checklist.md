@@ -72,15 +72,15 @@ No revisions requested. Agent verification before the learner's review: 24 Vites
 
 ## Code Tour and App Map
 
-- [ ] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
-- [ ] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
-- [ ] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
+- [x] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
+- [x] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
+- [x] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
 
-Activity and evidence:
-Route and stops:
-Edit outcome:
-Reflection:
-Activity mode:
+Activity and evidence: Brief evidence-based recap tied to the "working with an agent" goal: after slice 3 the swipe browser check timed out on ↶; the passing Saved checks and the contact-popup screenshot showed the app matched `prd.md > Tick and Contact Reveal`, so the check script was updated rather than the app. The learner was invited to name what mouse-driven checks don't prove and chose to skip.
+Route and stops: Reference-only route in the app map (not toured): `src/hooks/useSwipe.ts` (`releaseDecision`, `fly`) → `src/screens/SwipeDeck.tsx` (`onSwipe`) → `src/App.tsx` (`tick`) + `src/lib/storage.ts` (`addSaved`, `persistSaved`).
+Edit outcome: Not applicable (no edit offered; recap format).
+Reflection: Contribution invitation declined ("bỏ qua"); transfer question not pressed.
+Activity mode: Recap. Map checked offline with JavaScript disabled in Edge.
 
 ## Revisions
 
