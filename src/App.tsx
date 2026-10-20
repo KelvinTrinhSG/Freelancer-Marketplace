@@ -1,11 +1,13 @@
 import { useCallback, useMemo, useState } from 'react'
-import { ArrowLeft } from 'lucide-react'
 import { MarqueeFooter } from './components/MarqueeFooter'
 import { SavedButton } from './components/SavedButton'
 import { Toast } from './components/Toast'
 import { initialDeck } from './lib/deck'
 import { allSkills, findBySkill, getPool } from './lib/pool'
-import { addSaved, loadSaved, persistSaved } from './lib/storage'
+import { addSaved, loadFreelancers, loadSaved, persistFreelancers, persistSaved } from './lib/storage'
+import { createFreelancer } from './lib/validate'
+import type { FreelancerInput } from './lib/validate'
+import { FreelancerForm } from './screens/FreelancerForm'
 import { RoleScreen } from './screens/RoleScreen'
 import { SavedList } from './screens/SavedList'
 import { SkillPicker } from './screens/SkillPicker'
@@ -17,9 +19,10 @@ export default function App() {
   const [skill, setSkill] = useState('')
   const [deck, setDeck] = useState(initialDeck)
   const [saved, setSaved] = useState(loadSaved)
+  const [submitted, setSubmitted] = useState(loadFreelancers)
   const [toast, setToast] = useState<ToastMessage | null>(null)
 
-  const pool = useMemo(() => getPool(), [])
+  const pool = useMemo(() => getPool(submitted), [submitted])
   const matches = useMemo(() => findBySkill(pool, skill), [pool, skill])
   const savedIds = useMemo(() => new Set(saved.map((e) => e.id)), [saved])
 
@@ -49,7 +52,15 @@ export default function App() {
     [saved, notify],
   )
 
-  const savedButton = <SavedButton count={saved.length} onClick={() => setScreen('saved')} />
+  function addFreelancer(input: FreelancerInput) {
+    const next = [...submitted, createFreelancer(input)]
+    setSubmitted(next)
+    if (!persistFreelancers(next)) {
+      notify("Can't save on this browser. Your profile will disappear when you close the page.", 'error')
+    }
+  }
+
+  const savedButton =<SavedButton count={saved.length} onClick={() => setScreen('saved')} />
 
   return (
     <div className="relative min-h-dvh">
@@ -86,12 +97,12 @@ export default function App() {
           />
         )}
         {screen === 'form' && (
-          <section className="animate-fade-in space-y-4 rounded-2xl border border-card-border bg-card p-6 text-center">
-            <p className="text-lg font-bold">Freelancer sign-up is coming soon.</p>
-            <button onClick={() => setScreen('role')} className="inline-flex items-center gap-1 text-sm text-accent">
-              <ArrowLeft className="h-4 w-4" /> Back
-            </button>
-          </section>
+          <FreelancerForm
+            skills={allSkills(pool)}
+            onSubmit={addFreelancer}
+            onBack={() => setScreen('role')}
+            onClientView={() => setScreen('picker')}
+          />
         )}
       </main>
 

@@ -39,7 +39,7 @@ Build mode: fast
   Learner check: Tick two freelancers and read the contact popup each time. Open Saved and check both are there. Reload the page (F5), go back to Saved, and check they're still there.
   Commit: `Add contact reveal and persistent saved list`
 
-- [ ] **4. A freelancer adds themselves and shows up in the client's deck**
+- [x] **4. A freelancer adds themselves and shows up in the client's deck**
   Becomes usable: I'm a Freelancer opens the form: name, location, skills (chips + custom), video link, image link, contact. Missing required fields are highlighted and nothing is saved. A valid submit shows a confirmation. As a client, the custom skill now appears in the picker, and that freelancer's card shows up in the deck. This is still there after reload.
   Why now: It completes the second side of the core journey and reuses the pool, chips, and storage already proven. It sits after the kernel because the deck was already demoable with sample data.
   PRD ref: `prd.md > Freelancer Profile Form`, `prd.md > The Core Journey` (freelancer side)

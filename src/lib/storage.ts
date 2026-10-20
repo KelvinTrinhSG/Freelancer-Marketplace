@@ -1,6 +1,9 @@
 // The only module that touches localStorage. When a real backend arrives, swap this file for API calls.
 
+import type { Freelancer } from '../types'
+
 export const SAVED_KEY = 'fs.saved.v1'
+export const FREELANCERS_KEY = 'fs.freelancers.v1'
 
 export type SavedEntry = { id: string; savedAt: string }
 
@@ -54,4 +57,27 @@ export function addSaved(list: SavedEntry[], id: string, now = new Date()): Save
 
 export function persistSaved(list: SavedEntry[], store = defaultStore()): boolean {
   return writeList(SAVED_KEY, list, store)
+}
+
+function isFreelancer(x: unknown): x is Freelancer {
+  const f = x as Freelancer
+  return (
+    typeof f === 'object' &&
+    f !== null &&
+    typeof f.id === 'string' &&
+    typeof f.name === 'string' &&
+    Array.isArray(f.skills) &&
+    f.skills.every((s) => typeof s === 'string') &&
+    typeof f.imageUrl === 'string' &&
+    typeof f.contact === 'string'
+  )
+}
+
+/** Profiles submitted through the form on this browser. */
+export function loadFreelancers(store = defaultStore()): Freelancer[] {
+  return readList(FREELANCERS_KEY, isFreelancer, store).map((f) => ({ ...f, location: f.location ?? '', isSample: false }))
+}
+
+export function persistFreelancers(list: Freelancer[], store = defaultStore()): boolean {
+  return writeList(FREELANCERS_KEY, list, store)
 }
