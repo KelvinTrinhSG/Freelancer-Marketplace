@@ -19,7 +19,7 @@ Build mode: fast
   Learner check: Run `npm run dev`, open the URL, tap I'm a Client, pick "Short video editing", click ✕ a few times, then ↶, and keep going past the last card. Then type a skill like "underwater welding" and check that the no-match message appears. Does the theme and the card look the way you pictured?
   Commit: `Add skill picker and sample freelancer deck`
 
-- [ ] **2. Swipe the card with a finger or mouse**
+- [x] **2. Swipe the card with a finger or mouse**
   Becomes usable: Dragging the card follows the pointer and tilts. Releasing past the threshold flies the card out (left = skip, right = tick), otherwise it snaps back. The ✕/✓ buttons play the same fly-out. Tapping the video link opens it without starting a drag.
   Why now: The hand-written gesture is the biggest unknown in the spec, so it gets proven right after the deck exists, before more screens depend on it. The deck from slice 1 means the gesture only has to call existing actions.
   PRD ref: `prd.md > Swipe Deck`
