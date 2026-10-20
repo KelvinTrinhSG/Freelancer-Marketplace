@@ -75,7 +75,8 @@ flowchart LR
   npm run build      # production build into dist/
   ```
 - **Deploy (optional, chosen):** `.github/workflows/deploy.yml` runs on push to `main`: checkout → setup Node → `npm ci` → `npm run build` → upload `dist/` → deploy to Pages. One-time setup: repo **Settings → Pages → Source: GitHub Actions**. `vite.config.ts` uses `base: './'` so the site works under `https://<user>.github.io/<repo>/` whatever the repo is named.
-- **Note:** the project folder is not a git repo yet. `5-build` initializes git, and a public GitHub repo is needed for deploy and submission.
+- **Sharing links:** public repo https://github.com/KelvinTrinhSG/Freelancer-Marketplace · live app https://kelvintrinhsg.github.io/Freelancer-Marketplace/ · demo video: _not recorded yet_.
+- **Note (historical):** the project folder was not a git repo at planning time. `5-build` initializes git, and a public GitHub repo is needed for deploy and submission.
 - **Demo recording (required for submission):** in one browser, (1) role screen → I'm a Freelancer → submit a profile with a custom skill; (2) back → I'm a Client → pick that skill → their card appears; (3) pick a common skill, swipe a few, use ↶, tick one → contact reveal; (4) open Saved; (5) reload the page → Saved is still there. Also show a no-match skill.
 
 ## Look and Feel
