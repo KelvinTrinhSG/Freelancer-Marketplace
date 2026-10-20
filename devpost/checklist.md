@@ -29,7 +29,7 @@ Build mode: fast
   Learner check: In `npm run dev`, drag a card a little and let go (it should snap back), then drag it far left and far right. Try it on a phone or in the browser's mobile emulation (F12 → device toolbar). Click the video link and check that it opens in a new tab without swiping.
   Commit: `Add drag-to-swipe gesture`
 
-- [ ] **3. A tick reveals contact info and saves the freelancer, even after reload**
+- [x] **3. A tick reveals contact info and saves the freelancer, even after reload**
   Becomes usable: ✓ or a right swipe opens the contact reveal with the freelancer's contact info. The freelancer goes into the Saved list (count on the deck header), with a "Saved" badge when the deck loops. Saved survives a page reload. An empty Saved list shows a friendly message.
   Why now: This is the "oh, that's cool" beat from the scope and the first persistence, so it's the first place the data model can turn out wrong. It builds directly on the tick action from slices 1–2.
   PRD ref: `prd.md > Tick and Contact Reveal`, `prd.md > Saved List`, `prd.md > States and Boundaries` (persistence, empty Saved list)
@@ -61,7 +61,7 @@ Build mode: fast
 
 ## Hands-on Checkpoints
 
-- [ ] Early usable behavior explored — after slice 2 (theme, card, and swipe feel, while there's still time to change them)
+- [x] Early usable behavior explored — after slice 2 (theme, card, and swipe feel, while there's still time to change them). Learner tried it in the browser: "quá tuyệt" (great), no changes requested.
 - [ ] Final kick-the-tires exploration and feedback completed
 
 ## Final Review

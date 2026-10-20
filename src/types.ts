@@ -10,7 +10,7 @@ export type Freelancer = {
   createdAt: string
 }
 
-export type Screen = 'role' | 'form' | 'picker' | 'deck'
+export type Screen = 'role' | 'form' | 'picker' | 'deck' | 'saved'
 
 export type ToastMessage = {
   id: number

@@ -1,20 +1,27 @@
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { MarqueeFooter } from './components/MarqueeFooter'
+import { SavedButton } from './components/SavedButton'
 import { Toast } from './components/Toast'
+import { initialDeck } from './lib/deck'
 import { allSkills, findBySkill, getPool } from './lib/pool'
+import { addSaved, loadSaved, persistSaved } from './lib/storage'
 import { RoleScreen } from './screens/RoleScreen'
+import { SavedList } from './screens/SavedList'
 import { SkillPicker } from './screens/SkillPicker'
 import { SwipeDeck } from './screens/SwipeDeck'
-import type { Screen, ToastMessage } from './types'
+import type { Freelancer, Screen, ToastMessage } from './types'
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('role')
   const [skill, setSkill] = useState('')
+  const [deck, setDeck] = useState(initialDeck)
+  const [saved, setSaved] = useState(loadSaved)
   const [toast, setToast] = useState<ToastMessage | null>(null)
 
   const pool = useMemo(() => getPool(), [])
   const matches = useMemo(() => findBySkill(pool, skill), [pool, skill])
+  const savedIds = useMemo(() => new Set(saved.map((e) => e.id)), [saved])
 
   const notify = useCallback((text: string, tone: ToastMessage['tone'] = 'info') => {
     setToast({ id: Date.now(), text, tone })
@@ -27,8 +34,22 @@ export default function App() {
       return
     }
     setSkill(picked)
+    setDeck(initialDeck)
     setScreen('deck')
   }
+
+  const tick = useCallback(
+    (freelancer: Freelancer) => {
+      const next = addSaved(saved, freelancer.id)
+      setSaved(next)
+      if (next !== saved && !persistSaved(next)) {
+        notify("Can't save on this browser. Your saved list will be lost when you close the page.", 'error')
+      }
+    },
+    [saved, notify],
+  )
+
+  const savedButton = <SavedButton count={saved.length} onClick={() => setScreen('saved')} />
 
   return (
     <div className="relative min-h-dvh">
@@ -42,10 +63,27 @@ export default function App() {
           <RoleScreen onClient={() => setScreen('picker')} onFreelancer={() => setScreen('form')} />
         )}
         {screen === 'picker' && (
-          <SkillPicker skills={allSkills(pool)} onPick={pickSkill} onBack={() => setScreen('role')} />
+          <SkillPicker skills={allSkills(pool)} onPick={pickSkill} onBack={() => setScreen('role')} right={savedButton} />
         )}
         {screen === 'deck' && (
-          <SwipeDeck key={skill} skill={skill} cards={matches} onChangeSkill={() => setScreen('picker')} />
+          <SwipeDeck
+            skill={skill}
+            cards={matches}
+            deck={deck}
+            setDeck={setDeck}
+            savedIds={savedIds}
+            onTick={tick}
+            onChangeSkill={() => setScreen('picker')}
+            onViewSaved={() => setScreen('saved')}
+          />
+        )}
+        {screen === 'saved' && (
+          <SavedList
+            saved={saved}
+            pool={pool}
+            onBack={() => setScreen(skill ? 'deck' : 'picker')}
+            onFindMore={() => setScreen('picker')}
+          />
         )}
         {screen === 'form' && (
           <section className="animate-fade-in space-y-4 rounded-2xl border border-card-border bg-card p-6 text-center">
