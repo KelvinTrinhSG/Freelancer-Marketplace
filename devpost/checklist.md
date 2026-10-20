@@ -49,7 +49,7 @@ Build mode: fast
   Learner check: Tap I'm a Freelancer and press Submit with everything empty (errors should show). Fill it in with a new skill you type yourself, such as "Drone filming", and a real image link. Then go to I'm a Client, pick "Drone filming", and check that your card is there.
   Commit: `Add freelancer profile form`
 
-- [ ] **5. Anyone can open it from a public GitHub Pages link**
+- [x] **5. Anyone can open it from a public GitHub Pages link**
   Becomes usable: Pushing to `main` builds and deploys the site to GitHub Pages via GitHub Actions. The README explains what it is, how to run it, the demo steps, and the known limits (one pool per browser, sample data).
   Why now: Last, because deploying only makes sense once the full journey works. Kept small because `base: './'` was set from slice 1.
   PRD ref: `prd.md > What We're Building`
@@ -81,4 +81,7 @@ Reflection:
 Activity mode:
 
 ## Revisions
+
+- Deck position state moved from `SwipeDeck` up to `App` — opening the Saved list unmounted the deck and reset the client to card 1; lifting the state keeps their place.
+- GitHub Pages enabled by the agent with `gh api` (Source: GitHub Actions) instead of the learner using repo Settings — same result, with the learner's consent; action versions verified at build time (checkout v7, setup-node v7, configure-pages v6, upload-pages-artifact v5, deploy-pages v5).
 
