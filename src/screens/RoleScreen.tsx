@@ -11,9 +11,11 @@ export function RoleScreen({ onClient, onFreelancer }: Props) {
           <br />
           Swipe
         </h1>
-        <p className="mx-auto max-w-xs text-sm text-muted">
-          Swipe through freelancers for the skill you need. Tick the ones you like. Get their contact now.
+        <p className="mx-auto max-w-sm text-sm text-muted">
+          Hire freelancers for small, fast jobs. Pick a skill, browse portfolios one at a time, and save the people you like to get
+          their contact.
         </p>
+        <p className="mx-auto max-w-sm text-xs text-zinc-500">Freelancers: add your profile in a minute and get found by skill.</p>
       </div>
       <div className="flex w-full max-w-xs flex-col gap-4">
         <button

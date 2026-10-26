@@ -21,9 +21,9 @@ describe('normalizeSkill', () => {
 })
 
 describe('sample pool', () => {
-  it('has 15 labeled sample profiles', () => {
+  it('has 10 labeled sample profiles', () => {
     const pool = getPool()
-    expect(pool).toHaveLength(15)
+    expect(pool).toHaveLength(10)
     expect(pool.every((f) => f.isSample)).toBe(true)
   })
 

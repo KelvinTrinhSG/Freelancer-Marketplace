@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
 import { Check, RotateCcw, X } from 'lucide-react'
 import { ContactReveal } from '../components/ContactReveal'
@@ -28,12 +28,12 @@ type Props = {
   deck: DeckState
   setDeck: Dispatch<SetStateAction<DeckState>>
   savedIds: Set<string>
-  onTick: (freelancer: Freelancer) => void
+  onSave: (freelancer: Freelancer) => void
   onChangeSkill: () => void
   onViewSaved: () => void
 }
 
-export function SwipeDeck({ skill, cards, deck, setDeck, savedIds, onTick, onChangeSkill, onViewSaved }: Props) {
+export function SwipeDeck({ skill, cards, deck, setDeck, savedIds, onSave, onChangeSkill, onViewSaved }: Props) {
   const [revealed, setRevealed] = useState<Freelancer | null>(null)
   const current = cards[deck.index]
 
@@ -44,20 +44,35 @@ export function SwipeDeck({ skill, cards, deck, setDeck, savedIds, onTick, onCha
         return
       }
       if (current) {
-        onTick(current)
+        onSave(current)
         setRevealed(current)
       }
       setDeck((d) => advance(d, cards.length))
     },
-    [cards.length, current, onTick, setDeck],
+    [cards.length, current, onSave, setDeck],
   )
   const { ref: cardRef, handlers, style, dx, intent, fly, busy } = useSwipe(onSwipe)
+
+  // Desktop shortcuts: ← skip, → save, Backspace / Z bring back the last skipped card.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (revealed || busy || e.metaKey || e.ctrlKey || e.altKey) return
+      if (e.target instanceof HTMLElement && e.target.closest('input, textarea, select')) return
+      if (e.key === 'ArrowLeft') fly('left')
+      else if (e.key === 'ArrowRight') fly('right')
+      else if (e.key === 'Backspace' || e.key.toLowerCase() === 'z') setDeck(back)
+      else return
+      e.preventDefault()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [revealed, busy, fly, setDeck])
 
   return (
     <section className="flex animate-fade-in flex-col gap-4">
       <ScreenHeader
         title={skill}
-        subtitle={`${cards.length} freelancer${cards.length === 1 ? '' : 's'} · card ${deck.index + 1} of ${cards.length}`}
+        subtitle={`${deck.index + 1} of ${cards.length} freelancer${cards.length === 1 ? '' : 's'}`}
         onBack={onChangeSkill}
         right={<SavedButton count={savedIds.size} onClick={onViewSaved} />}
       />
@@ -73,7 +88,7 @@ export function SwipeDeck({ skill, cards, deck, setDeck, savedIds, onTick, onCha
             data-testid="swipe-card"
           >
             <FreelancerCard freelancer={current} saved={savedIds.has(current.id)} />
-            <Stamp label="TICK" className="left-5 -rotate-12 border-emerald-500 text-emerald-500" show={dx > 0} intent={intent} />
+            <Stamp label="SAVE" className="left-5 -rotate-12 border-emerald-500 text-emerald-500" show={dx > 0} intent={intent} />
             <Stamp label="SKIP" className="right-5 rotate-12 border-red-500 text-red-500" show={dx < 0} intent={intent} />
           </div>
         )}
@@ -99,12 +114,20 @@ export function SwipeDeck({ skill, cards, deck, setDeck, savedIds, onTick, onCha
         <button
           onClick={() => fly('right')}
           disabled={busy}
-          aria-label="Tick"
+          aria-label="Save"
           className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-emerald-500 bg-black text-emerald-500 transition-transform hover:scale-105 active:scale-95"
         >
           <Check className="h-8 w-8" />
         </button>
       </div>
+
+      <p className="text-center text-[11px] text-muted">
+        ✓ or swipe right to save and get contact · ✕ or swipe left to skip · ↶ brings back the last skip
+        <span className="hidden [@media(pointer:fine)]:inline">
+          <br />
+          Keyboard: → save · ← skip · Z undo
+        </span>
+      </p>
 
       {revealed && (
         <ContactReveal

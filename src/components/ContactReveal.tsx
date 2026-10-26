@@ -13,7 +13,7 @@ export function ContactReveal({ freelancer, onKeepSwiping, onViewSaved }: Props)
       <div className="w-full max-w-sm animate-fade-in space-y-5 rounded-2xl border border-accent/50 bg-card p-6 shadow-[0_10px_60px_rgba(135,109,255,0.35)]">
         <div className="flex items-center gap-4">
           <img
-            src={freelancer.imageUrl}
+            src={freelancer.avatarUrl ?? freelancer.imageUrl}
             alt=""
             className="h-16 w-16 rounded-xl border border-card-border bg-accent/30 object-cover"
           />
@@ -43,7 +43,7 @@ export function ContactReveal({ freelancer, onKeepSwiping, onViewSaved }: Props)
             autoFocus
             className="flex-1 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-white hover:bg-accent/90"
           >
-            Keep swiping
+            Keep browsing
           </button>
         </div>
       </div>

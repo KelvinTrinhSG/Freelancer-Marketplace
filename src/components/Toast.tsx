@@ -27,7 +27,20 @@ export function Toast({ toast, onClose }: Props) {
         <span className="absolute -bottom-px -left-px h-2 w-2 border-b border-l border-zinc-500" />
         <span className="absolute -bottom-px -right-px h-2 w-2 border-b border-r border-zinc-500" />
         <span className="mt-0.5">{icons[toast.tone]}</span>
-        <p className="flex-1">{toast.text}</p>
+        <div className="flex-1 space-y-2">
+          <p>{toast.text}</p>
+          {toast.action && (
+            <button
+              onClick={() => {
+                toast.action?.onClick()
+                onClose()
+              }}
+              className="text-xs font-semibold text-accent underline underline-offset-4 hover:text-white"
+            >
+              {toast.action.label}
+            </button>
+          )}
+        </div>
         <button onClick={onClose} className="text-muted hover:text-white" aria-label="Close">
           <X className="h-4 w-4" />
         </button>

@@ -81,7 +81,7 @@ flowchart LR
   LS1 --> Pool
   Pool -->|filter by skill| Picker
   Picker -->|matches &gt; 0| Deck[SwipeDeck]
-  Deck -->|tick| Reveal[ContactReveal]
+  Deck -->|save| Reveal[ContactReveal]
   Reveal --> LS2[(localStorage<br/>fs.saved.v1)]
   LS2 --> Saved[SavedList]
     </pre>
@@ -92,7 +92,7 @@ flowchart LR
                        │
                   matches > 0
                        ▼
-                  SwipeDeck ──tick──▶ ContactReveal ──▶ [localStorage: fs.saved.v1] ──▶ SavedList
+                  SwipeDeck ──save──▶ ContactReveal ──▶ [localStorage: fs.saved.v1] ──▶ SavedList
     </pre>
   </div>
 
@@ -177,7 +177,7 @@ flowchart LR
 │   ├── data/   skills.ts, sampleFreelancers.ts
 │   ├── lib/    storage.ts, pool.ts, deck.ts, validate.ts (+ tests)
 │   ├── hooks/  useSwipe.ts
-│   ├── components/ SkillChips, FreelancerCard, ContactReveal, Toast, MarqueeFooter
+│   ├── components/ SkillChips, FreelancerCard, ContactReveal, Toast
 │   └── screens/    RoleScreen, FreelancerForm, SkillPicker, SwipeDeck, SavedList
 ├── index.html  vite.config.ts  package.json  README.md
 └── devpost/</pre>
@@ -196,12 +196,12 @@ flowchart LR
 npm run dev     # open http://localhost:5173
 npm test
 npm run build</pre>
-    <p><b>Demo video:</b> submit a freelancer with a custom skill → pick that skill as a client → their card appears → swipe, ↶, tick → contact reveal → Saved → reload, Saved is still there → try a no-match skill.</p>
+    <p><b>Demo video:</b> submit a freelancer with a custom skill → pick that skill as a client → their card appears → swipe, ↶, save → contact reveal → Saved → reload, Saved is still there → try a no-match skill.</p>
   </div>
 
   <h2>Decisions</h2>
   <div class="card">
-    <p><b>Learner:</b> frontend + localStorage · one pool per browser · GitHub Actions → Pages · Vite + React + TS · ScratchCard style · accepted: pill role buttons, marquee footer, hand-written swipe.</p>
+    <p><b>Learner:</b> frontend + localStorage · one pool per browser · GitHub Actions → Pages · Vite + React + TS · ScratchCard style · accepted: pill role buttons, hand-written swipe.</p>
     <p><b>Agent details (changeable):</b> Tailwind v4, lucide, Vitest, storage keys, 30% swipe threshold, starter skills, picsum images, one free-text contact field, ↶ undoes skips only.</p>
     <p><b>Learner uncertainty:</b> none raised.</p>
   </div>
@@ -215,8 +215,8 @@ const flows = {
     ["Pick a skill", "Tap a chip or type a skill and press Find. <code>pool.findBySkill</code> matches ignoring case and spaces.", "screens/SkillPicker.tsx, lib/pool.ts", "prd.md › Skill Picker"],
     ["No match?", "A toast says no freelancers have that skill, and you stay on the picker.", "components/Toast.tsx", "prd.md › States and Boundaries"],
     ["Swipe", "One card at a time. Drag left / ✕ skips, ↶ goes back to the last skip, and after the last card the deck wraps to the first.", "screens/SwipeDeck.tsx, hooks/useSwipe.ts, lib/deck.ts", "prd.md › Swipe Deck"],
-    ["Tick", "Drag right / ✓ saves the id to <code>fs.saved.v1</code> and opens ContactReveal.", "components/ContactReveal.tsx, lib/storage.ts", "prd.md › Tick and Contact Reveal"],
-    ["Saved list", "Every ticked freelancer with contact info. Still there after reload.", "screens/SavedList.tsx", "prd.md › Saved List"]
+    ["Save", "Drag right / ✓ saves the id to <code>fs.saved.v1</code> and opens ContactReveal.", "components/ContactReveal.tsx, lib/storage.ts", "prd.md › Save and Contact Reveal"],
+    ["Saved list", "Every saved freelancer with contact info. Still there after reload.", "screens/SavedList.tsx", "prd.md › Saved List"]
   ],
   freelancer: [
     ["Pick a role", "Tap <b>I'm a Freelancer</b>.", "screens/RoleScreen.tsx → App state = form", "prd.md › Role Selection"],
@@ -251,7 +251,7 @@ const comps = [
   ["SwipeDeck", "Deck state from deck.ts. ✕ / ↶ / ✓ buttons, Change skill, Saved count.", "prd.md › Swipe Deck"],
   ["FreelancerCard", "Big image (placeholder on error), name, location, skills, Sample/Saved tags, video link that doesn't trigger a drag.", "prd.md › Swipe Deck"],
   ["useSwipe", "Pointer capture, translate + rotate, 30% / 100px threshold, ~200ms fly-out, touch-action: pan-y.", "prd.md › Swipe Deck"],
-  ["ContactReveal", "Overlay after a tick: contact info, Keep swiping, View saved.", "prd.md › Tick and Contact Reveal"],
+  ["ContactReveal", "Overlay after a save: contact info, Keep browsing, View saved.", "prd.md › Save and Contact Reveal"],
   ["SavedList", "Saved ids resolved against the pool, newest first. Empty-state message.", "prd.md › Saved List"],
   ["lib/ (storage, pool, deck, validate)", "Pure logic with Vitest tests. storage.ts is the seam for the future SQL Server API.", "prd.md › States and Boundaries"]
 ];

@@ -1,43 +1,37 @@
 import type { Freelancer } from '../types'
 
 // SAMPLE DATA: fictional profiles so the deck is never empty on first use.
-// Images are seeded placeholder photos; video links are search pages, not real portfolios.
-type SampleSeed = [id: string, name: string, location: string, skills: string[], video: 'yt' | 'tt']
+// public/samples/work-<n>.jpg is the work sample for each profile's first skill; <n>.jpg is the portrait,
+// and names are matched to each portrait. Every starter skill has at least 2 profiles.
+type SampleSeed = [id: string, name: string, location: string, skills: string[], photo: number, videoUrl?: string]
 
 const seeds: SampleSeed[] = [
-  ['s-01', 'Linh Nguyen', 'Ho Chi Minh City, VN', ['Short video editing', 'Social media content'], 'tt'],
-  ['s-02', 'Minh Tran', 'Hanoi, VN', ['Short video editing', 'Photo editing'], 'yt'],
-  ['s-03', 'Arjun Mehta', 'Bangalore, IN', ['Game testing'], 'yt'],
-  ['s-04', 'Sofia Reyes', 'Manila, PH', ['Game testing', 'Subtitles & translation'], 'yt'],
-  ['s-05', 'Huy Pham', 'Da Nang, VN', ['Logo design', 'Illustration'], 'yt'],
-  ['s-06', 'Emma Lindqvist', 'Stockholm, SE', ['Logo design', 'Landing page design'], 'yt'],
-  ['s-07', 'Kenji Sato', 'Osaka, JP', ['Social media content', 'Short video editing'], 'tt'],
-  ['s-08', 'Thao Le', 'Can Tho, VN', ['Voice-over', 'Subtitles & translation'], 'yt'],
-  ['s-09', 'Lucas Silva', 'São Paulo, BR', ['Voice-over', 'Music & sound effects'], 'yt'],
-  ['s-10', 'Mai Vo', 'Hue, VN', ['Subtitles & translation', 'Social media content'], 'tt'],
-  ['s-11', 'Ana Popescu', 'Bucharest, RO', ['Illustration', 'Photo editing'], 'yt'],
-  ['s-12', 'Tuan Do', 'Hai Phong, VN', ['Photo editing', 'Logo design'], 'yt'],
-  ['s-13', 'Priya Nair', 'Kochi, IN', ['Landing page design', 'Illustration'], 'yt'],
-  ['s-14', 'Daniel Okafor', 'Lagos, NG', ['Landing page design', 'Game testing'], 'yt'],
-  ['s-15', 'Bao Hoang', 'Ho Chi Minh City, VN', ['Music & sound effects', 'Voice-over'], 'tt'],
+  ['s-01', 'Lucas Silva', 'São Paulo, Brazil', ['Voice-over', 'Music & sound effects'], 1, yt('rVLJrEeu0wE')],
+  ['s-02', 'Marco Rossi', 'Milan, Italy', ['Logo design', 'Illustration'], 2, yt('DNvUqVxt54c')],
+  ['s-03', 'Daniel Okafor', 'Lagos, Nigeria', ['Illustration', 'Landing page design'], 3, yt('E422ZDnk7oo')],
+  ['s-04', 'Sofia Reyes', 'Mexico City, Mexico', ['Subtitles & translation', 'Social media content'], 4, yt('5Y3Em-IMSwM')],
+  ['s-05', 'Emma Lindqvist', 'Stockholm, Sweden', ['Social media content', 'Short video editing'], 5, yt('CpVdN-gw-oc')],
+  ['s-06', 'Alex Novak', 'Prague, Czechia', ['Short video editing', 'Music & sound effects'], 6, yt('RPn6hLMpa9E')],
+  ['s-07', 'Tom Becker', 'Berlin, Germany', ['Game testing', 'Short video editing'], 7, yt('F9m20xu6q4s')],
+  ['s-08', 'Henrik Larsen', 'Copenhagen, Denmark', ['Photo editing', 'Landing page design'], 8, yt('Vd_Gbcndo5E')],
+  ['s-09', 'Mateo Alvarez', 'Buenos Aires, Argentina', ['Photo editing', 'Logo design'], 9, yt('-9QODH_7m7E')],
+  ['s-10', 'Ana Popescu', 'Bucharest, Romania', ['Game testing', 'Subtitles & translation', 'Voice-over'], 10, yt('oBipFAVwTWs')],
 ]
 
-function videoLink(kind: 'yt' | 'tt', skill: string): string {
-  const q = encodeURIComponent(`${skill} portfolio`)
-  return kind === 'tt'
-    ? `https://www.tiktok.com/search?q=${q}`
-    : `https://www.youtube.com/results?search_query=${q}`
+function yt(videoId: string): string {
+  return `https://www.youtube.com/watch?v=${videoId}`
 }
 
-export const SAMPLE_FREELANCERS: Freelancer[] = seeds.map(([id, name, location, skills, video]) => {
+export const SAMPLE_FREELANCERS: Freelancer[] = seeds.map(([id, name, location, skills, photo, videoUrl]) => {
   const handle = name.toLowerCase().replace(/\s+/g, '.')
   return {
     id,
     name,
     location,
     skills,
-    videoUrl: videoLink(video, skills[0]),
-    imageUrl: `https://picsum.photos/seed/freelancer-${id}/800/1000`,
+    ...(videoUrl ? { videoUrl } : {}),
+    imageUrl: `${import.meta.env.BASE_URL}samples/work-${photo}.jpg`,
+    avatarUrl: `${import.meta.env.BASE_URL}samples/${photo}.jpg`,
     contact: `Email: ${handle}@example.com\nTelegram: @${handle.replace('.', '_')}`,
     isSample: true,
     createdAt: '2026-10-01T00:00:00.000Z',

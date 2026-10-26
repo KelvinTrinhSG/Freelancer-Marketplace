@@ -20,12 +20,12 @@ export function SavedList({ saved, pool, onBack, onFindMore }: Props) {
 
   return (
     <section className="animate-fade-in space-y-6">
-      <ScreenHeader title="Saved" subtitle="Everyone you ticked, with how to reach them." onBack={onBack} />
+      <ScreenHeader title="Saved" subtitle="Everyone you saved, with how to reach them." onBack={onBack} />
 
       {rows.length === 0 ? (
         <div className="space-y-4 rounded-2xl border border-card-border bg-card p-8 text-center">
           <HeartOff className="mx-auto h-8 w-8 text-muted" />
-          <p className="text-sm">Nothing ticked yet. Go swipe!</p>
+          <p className="text-sm">No one saved yet. Browse freelancers to start.</p>
           <button onClick={onFindMore} className="rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent/90">
             Pick a skill
           </button>
@@ -34,7 +34,7 @@ export function SavedList({ saved, pool, onBack, onFindMore }: Props) {
         <ul className="space-y-3">
           {rows.map((f) => (
             <li key={f.id} className="flex gap-4 rounded-2xl border border-card-border bg-card p-4">
-              <img src={f.imageUrl} alt="" className="h-20 w-20 shrink-0 rounded-xl bg-accent/30 object-cover" />
+              <img src={f.avatarUrl ?? f.imageUrl} alt="" className="h-20 w-20 shrink-0 rounded-xl bg-accent/30 object-cover" />
               <div className="min-w-0 space-y-1">
                 <p className="font-bold">{f.name}</p>
                 <p className="text-[11px] text-muted">{f.skills.join(' · ')}</p>

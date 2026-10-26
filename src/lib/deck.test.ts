@@ -27,9 +27,9 @@ describe('deck', () => {
     expect(back(s)).toBe(s)
   })
 
-  it('back skips over ticked cards (ticks are not undone)', () => {
+  it('back skips over saved cards (saves are not undone)', () => {
     let s = skip(initialDeck, 5) // skipped 0, on 1
-    s = advance(s, 5) // ticked 1, on 2
+    s = advance(s, 5) // saved 1, on 2
     expect(back(s).index).toBe(0)
   })
 

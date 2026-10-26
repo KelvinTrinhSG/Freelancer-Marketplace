@@ -16,7 +16,7 @@ export function skip(state: DeckState, size: number): DeckState {
   return { index: next(state.index, size), skippedHistory: [...state.skippedHistory, state.index] }
 }
 
-/** Move on after a tick. Ticks are not undoable with ↶. */
+/** Move on after a save. Saves are not undoable with ↶. */
 export function advance(state: DeckState, size: number): DeckState {
   return { ...state, index: next(state.index, size) }
 }

@@ -19,3 +19,6 @@ dist-ssr
 /.agents/
 /agent/
 /skills-lock.json
+
+# Local notes from the judge review (not part of the app)
+NewComment.txt

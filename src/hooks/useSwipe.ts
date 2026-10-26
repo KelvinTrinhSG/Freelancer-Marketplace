@@ -89,7 +89,7 @@ export function useSwipe(onSwipe: (dir: SwipeDirection) => void) {
     cursor: phase === 'drag' ? 'grabbing' : 'grab',
   }
 
-  // 0..1 strength of the current drag toward a decision, for the SKIP / TICK stamps.
+  // 0..1 strength of the current drag toward a decision, for the SKIP / SAVE stamps.
   const intent = Math.min(1, Math.abs(dx) / swipeThreshold(cardWidth))
 
   return { ref, handlers, style, dx, intent, fly, busy: phase === 'fly' }

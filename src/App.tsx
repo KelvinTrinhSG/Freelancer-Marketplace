@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react'
-import { MarqueeFooter } from './components/MarqueeFooter'
 import { SavedButton } from './components/SavedButton'
 import { Toast } from './components/Toast'
 import { initialDeck } from './lib/deck'
@@ -26,22 +25,25 @@ export default function App() {
   const matches = useMemo(() => findBySkill(pool, skill), [pool, skill])
   const savedIds = useMemo(() => new Set(saved.map((e) => e.id)), [saved])
 
-  const notify = useCallback((text: string, tone: ToastMessage['tone'] = 'info') => {
-    setToast({ id: Date.now(), text, tone })
+  const notify = useCallback((text: string, tone: ToastMessage['tone'] = 'info', action?: ToastMessage['action']) => {
+    setToast({ id: Date.now(), text, tone, action })
   }, [])
   const closeToast = useCallback(() => setToast(null), [])
 
-  function pickSkill(picked: string) {
-    if (findBySkill(pool, picked).length === 0) {
-      notify(`No freelancers have "${picked}" yet. Try another skill.`, 'error')
-      return
-    }
+  const pickSkill = useCallback((picked: string) => {
     setSkill(picked)
     setDeck(initialDeck)
     setScreen('deck')
+  }, [])
+
+  function noMatch(picked: string) {
+    notify(`No freelancers for "${picked}" yet. Try another skill, or are you one?`, 'error', {
+      label: 'Add yourself',
+      onClick: () => setScreen('form'),
+    })
   }
 
-  const tick = useCallback(
+  const save = useCallback(
     (freelancer: Freelancer) => {
       const next = addSaved(saved, freelancer.id)
       setSaved(next)
@@ -74,7 +76,14 @@ export default function App() {
           <RoleScreen onClient={() => setScreen('picker')} onFreelancer={() => setScreen('form')} />
         )}
         {screen === 'picker' && (
-          <SkillPicker skills={allSkills(pool)} onPick={pickSkill} onBack={() => setScreen('role')} right={savedButton} />
+          <SkillPicker
+            skills={allSkills(pool)}
+            countFor={(s) => findBySkill(pool, s).length}
+            onPick={pickSkill}
+            onNoMatch={noMatch}
+            onBack={() => setScreen('role')}
+            right={savedButton}
+          />
         )}
         {screen === 'deck' && (
           <SwipeDeck
@@ -83,7 +92,7 @@ export default function App() {
             deck={deck}
             setDeck={setDeck}
             savedIds={savedIds}
-            onTick={tick}
+            onSave={save}
             onChangeSkill={() => setScreen('picker')}
             onViewSaved={() => setScreen('saved')}
           />
@@ -107,7 +116,6 @@ export default function App() {
       </main>
 
       <Toast toast={toast} onClose={closeToast} />
-      <MarqueeFooter />
     </div>
   )
 }

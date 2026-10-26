@@ -61,17 +61,17 @@
 <div class="hero">
   <span class="tag">PRD · Approved</span>
   <h1>Freelancer Swipe</h1>
-  <p>Small clients swipe through freelancers for a skill, tick the ones they like, and instantly get their contact info, plus a quick form for freelancers to join the deck.</p>
+  <p>Small clients swipe through freelancers for a skill, save the ones they like, and instantly get their contact info, plus a quick form for freelancers to join the deck.</p>
 </div>
 <main>
   <section class="expand">
     <h2>From scope to product</h2>
-    <p>Scope said <em>"client enters a skill and swipes"</em>. Now we know exactly what that means: a Tinder-style role screen, skill chips with a type-your-own fallback, one big best-project image per card, swipe <strong>or</strong> ✕/✓ with a back button, a tick that reveals contact instantly, and a Saved list that survives a restart. Scope also gained one thing: a minimal freelancer form, so the demo closes the loop on both sides.</p>
+    <p>Scope said <em>"client enters a skill and swipes"</em>. Now we know exactly what that means: a Tinder-style role screen, skill chips with a type-your-own fallback, one big best-project image per card, swipe <strong>or</strong> ✕/✓ with a back button, a save that reveals contact instantly, and a Saved list that survives a restart. Scope also gained one thing: a minimal freelancer form, so the demo closes the loop on both sides.</p>
   </section>
 
   <section>
     <h2>The Core Journey</h2>
-    <svg class="diagram" viewBox="0 0 860 300" role="img" aria-label="Role screen branches to freelancer form or skill picker; freelancer form feeds the pool; skill picker leads to swipe deck; tick leads to contact reveal and saved list.">
+    <svg class="diagram" viewBox="0 0 860 300" role="img" aria-label="Role screen branches to freelancer form or skill picker; freelancer form feeds the pool; skill picker leads to swipe deck; save leads to contact reveal and saved list.">
       <defs>
         <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#fd5068"/></marker>
         <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#9aa1ab"/></marker>
@@ -82,7 +82,7 @@
         <rect x="200" y="20" width="150" height="56" rx="12" fill="none" stroke="#fd5068"/><text x="275" y="45">Freelancer form</text><text x="275" y="63" font-size="11">name, skills, links, contact</text>
         <rect x="420" y="20" width="150" height="56" rx="12" fill="none" stroke="#9aa1ab" stroke-dasharray="4 3"/><text x="495" y="45">Freelancer pool</text><text x="495" y="63" font-size="11">10–20 samples + new</text>
 
-        <rect x="200" y="210" width="150" height="56" rx="12" fill="none" stroke="#fd5068"/><text x="275" y="235">Skill picker</text><text x="275" y="253" font-size="11">tick or type</text>
+        <rect x="200" y="210" width="150" height="56" rx="12" fill="none" stroke="#fd5068"/><text x="275" y="235">Skill picker</text><text x="275" y="253" font-size="11">select or type</text>
         <rect x="420" y="210" width="150" height="56" rx="12" fill="#fd5068" fill-opacity=".12" stroke="#fd5068"/><text x="495" y="235" font-weight="700">Swipe deck</text><text x="495" y="253" font-size="11">✕ ↶ ✓ · loops at end</text>
         <rect x="640" y="150" width="150" height="56" rx="12" fill="#2e8b57" fill-opacity=".15" stroke="#2e8b57"/><text x="715" y="175">Contact reveal</text><text x="715" y="193" font-size="11">right after ✓</text>
         <rect x="640" y="240" width="150" height="50" rx="12" fill="#2e8b57" fill-opacity=".15" stroke="#2e8b57"/><text x="715" y="270">Saved list</text>
@@ -109,7 +109,7 @@
       <button data-p="1">Freelancer form</button>
       <button data-p="2">Skill picker</button>
       <button data-p="3">Swipe deck</button>
-      <button data-p="4">Tick → contact</button>
+      <button data-p="4">Save → contact</button>
       <button data-p="5">Saved list</button>
     </div>
 
@@ -122,7 +122,7 @@
 
     <div class="panel">
       <p>A short form, no account, no upload.</p>
-      <ul><li>Name · Location · Skills (tick chips + type a missing one) · YouTube/TikTok link · Best-project <b>image link</b> · Contact info</li></ul>
+      <ul><li>Name · Location · Skills (select chips + type a missing one) · YouTube/TikTok link · Best-project <b>image link</b> · Contact info</li></ul>
       <ul class="crit">
         <li>A typed custom skill counts like any listed skill.</li>
         <li>Missing required fields are pointed out; nothing is saved.</li>
@@ -146,7 +146,7 @@
       <ul class="crit">
         <li>One large best-project image, name, location, skills.</li>
         <li>YouTube/TikTok link visible; tap opens the video.</li>
-        <li>Swipe left / ✕ skips · swipe right / ✓ ticks.</li>
+        <li>Swipe left / ✕ skips · swipe right / ✓ saves.</li>
         <li>↶ returns to the previously skipped freelancer.</li>
         <li>After the last card, the deck restarts from the first.</li>
       </ul>
@@ -156,17 +156,17 @@
     <div class="panel">
       <p>The "oh, that's cool" beat: no waiting, no proposal.</p>
       <ul class="crit">
-        <li>Ticking shows that freelancer's contact info immediately.</li>
+        <li>Saving shows that freelancer's contact info immediately.</li>
         <li>The freelancer is added to the Saved list.</li>
       </ul>
     </div>
 
     <div class="panel">
       <ul class="crit">
-        <li>Every ticked freelancer with name, image, contact info.</li>
+        <li>Every saved freelancer with name, image, contact info.</li>
         <li>Still there after closing and reopening the app on the same device.</li>
       </ul>
-      <p class="assume">Assumption: empty list shows a short "nothing ticked yet" message.</p>
+      <p class="assume">Assumption: empty list shows a short "nothing saved yet" message.</p>
     </div>
     <noscript><p>All screen details are in <code>prd.md &gt; Features and Behavior</code>.</p></noscript>
   </section>
@@ -191,7 +191,7 @@
     <h2>Boundary</h2>
     <details class="now" open><summary>Building now</summary><ul>
       <li>Role screen · minimal freelancer form · skill picker · swipe deck (swipe + buttons + back)</li>
-      <li>Tick → contact reveal · Saved list that survives restart</li>
+      <li>Save → contact reveal · Saved list that survives restart</li>
       <li>Sample freelancers · no-match notification · deck loop</li>
     </ul></details>
     <details class="later"><summary>Deferred</summary><ul>
